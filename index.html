@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoMetras - Calculadora de Impacto de CO₂</title>
+  <meta name="description" content="Calcule a emissão de CO₂ gerada pelos seus deslocamentos diários e descubra como reduzir sua pegada de carbono.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Cabeçalho Principal -->
+    <header class="app-header">
+      <div class="logo-badge" aria-hidden="true">
+        <svg class="icon-leaf" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+          <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+        </svg>
+      </div>
+      <h1 class="app-title">EcoMetras</h1>
+      <p class="app-subtitle">Calcule o impacto de CO₂ dos seus trajetos diários e descubra alternativas sustentáveis para a sua rotina.</p>
+    </header>
+
+    <!-- Cartão do Formulário -->
+    <main class="card form-card">
+      <form id="calculatorForm" novalidate>
+        <!-- 1. Campo de Entrada (Distância) -->
+        <div class="form-group">
+          <label for="distanceInput" class="form-label">
+            Distância percorrida por dia
+          </label>
+          <div class="input-wrapper">
+            <input 
+              type="number" 
+              id="distanceInput" 
+              class="form-input" 
+              placeholder="Ex: 15" 
+              min="0.1" 
+              step="any"
+              aria-describedby="distanceHelp validationAlert"
+              autocomplete="off"
+            >
+            <span class="input-unit" aria-hidden="true">km</span>
+          </div>
+          <small id="distanceHelp" class="input-help">Informe a soma estimada de ida e volta dos seus trajetos diários.</small>
+          
+          <!-- Mensagem de Validação Dinâmica -->
+          <div id="validationAlert" class="alert-message error-message hidden" role="alert" aria-live="polite">
+            <svg class="alert-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span id="validationText">Por favor, insira uma distância válida.</span>
+          </div>
+        </div>
+
+        <!-- 2. Elementos de Escolha (Meio de Transporte) -->
+        <fieldset class="form-group">
+          <legend class="form-label">Selecione o meio de transporte habitual</legend>
+          <div class="radio-options-grid" role="radiogroup" aria-label="Meios de transporte">
+            <!-- Opção 1: Bicicleta / Caminhada -->
+            <label class="radio-card">
+              <input type="radio" name="transportMode" value="bike" class="radio-native" checked>
+              <div class="radio-card-content">
+                <span class="radio-icon" aria-hidden="true">🚲</span>
+                <div class="radio-info">
+                  <span class="radio-title">Bicicleta / A pé</span>
+                  <span class="radio-desc">Zero emissão de carbono</span>
+                </div>
+                <span class="radio-badge eco">Eco</span>
+              </div>
+            </label>
+
+            <!-- Opção 2: Ônibus / Coletivo -->
+            <label class="radio-card">
+              <input type="radio" name="transportMode" value="bus" class="radio-native">
+              <div class="radio-card-content">
+                <span class="radio-icon" aria-hidden="true">🚌</span>
+                <div class="radio-info">
+                  <span class="radio-title">Ônibus / Coletivo</span>
+                  <span class="radio-desc">Emissão compartilhada</span>
+                </div>
+                <span class="radio-badge moderate">Moderado</span>
+              </div>
+            </label>
+
+            <!-- Opção 3: Motocicleta -->
+            <label class="radio-card">
+              <input type="radio" name="transportMode" value="motorcycle" class="radio-native">
+              <div class="radio-card-content">
+                <span class="radio-icon" aria-hidden="true">🏍️</span>
+                <div class="radio-info">
+                  <span class="radio-title">Motocicleta</span>
+                  <span class="radio-desc">Combustão individual ágil</span>
+                </div>
+                <span class="radio-badge medium">Médio</span>
+              </div>
+            </label>
+
+            <!-- Opção 4: Carro Individual -->
+            <label class="radio-card">
+              <input type="radio" name="transportMode" value="car" class="radio-native">
+              <div class="radio-card-content">
+                <span class="radio-icon" aria-hidden="true">🚗</span>
+                <div class="radio-info">
+                  <span class="radio-title">Carro Individual</span>
+                  <span class="radio-desc">Combustão fóssil</span>
+                </div>
+                <span class="radio-badge high">Alto</span>
+              </div>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- 3. Botão Principal -->
+        <button type="submit" id="btnCalculate" class="btn-primary">
+          <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect width="16" height="20" x="4" y="2" rx="2"/>
+            <line x1="8" x2="16" y1="6" y2="6"/>
+            <line x1="16" x2="16" y1="14"/>
+            <line x1="16" x2="16" y1="18"/>
+            <path d="M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M8 18h.01M12 18h.01"/>
+          </svg>
+          <span>Calcular Impacto</span>
+        </button>
+      </form>
+    </main>
+
+    <!-- 4. Área de Resultado (Cartão com Animação) -->
+    <section id="resultCard" class="card result-card hidden" aria-live="polite">
+      <div class="result-header">
+        <span id="resultBadge" class="status-pill">Status</span>
+        <h2 class="result-heading">Resultado da Análise</h2>
+      </div>
+
+      <div class="result-metric-box">
+        <span class="metric-caption">Emissão estimada por dia:</span>
+        <div class="metric-value-wrapper">
+          <span id="metricValue" class="metric-value">0,00</span>
+          <span class="metric-unit">kg de CO₂</span>
+        </div>
+        <p id="monthlyProjection" class="monthly-projection">
+          Aproximadamente <strong>0,00 kg</strong> de CO₂ por mês (22 dias úteis).
+        </p>
+      </div>
+
+      <div id="feedbackBanner" class="feedback-banner">
+        <div class="feedback-icon" id="feedbackIcon">🌱</div>
+        <div class="feedback-text">
+          <h3 id="feedbackTitle" class="feedback-title">Excelente escolha!</h3>
+          <p id="feedbackMessage" class="feedback-message">Sua locomoção é amiga do meio ambiente.</p>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <span class="tip-label">💡 Dica Ecológica:</span>
+        <p id="tipText" class="tip-text">Opte por deslocamentos ativos sempre que possível.</p>
+      </div>
+
+      <button type="button" id="btnReset" class="btn-secondary">
+        Novo Cálculo
+      </button>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="app-footer">
+      <p>Desenvolvido para conscientização ambiental • EcoMetras © 2026</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
